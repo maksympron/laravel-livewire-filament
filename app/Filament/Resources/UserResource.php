@@ -3,11 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Actions\ActionGroup;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
@@ -15,9 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Console\Migrations\TableGuesser;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
@@ -30,12 +26,29 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')->required(),
-                TextInput::make('email')->label('email')
-                                                ->email()->maxLength(255)
-                                                ->unique(ignoreRecord: true)
-                                                ->required(),
-                DateTimePicker::make('email_verified_at')->label('Email Verified At')->default(now())->required(),
-                TextInput::make('password')->label('Password')->password()->dehydrated(fn($state)=>filled($state))->required(),
+                TextInput::make('email')
+                    ->label('Email')
+                    ->email()
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true)
+                    ->required(),
+                DateTimePicker::make('email_verified_at')
+                    ->label('Email Verified At')
+                    ->default(now())
+                    ->required(),
+                TextInput::make('password')
+                    ->label('Password')
+                    ->password()
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(),
+                Select::make('role')
+                    ->label('Role')
+                    ->options([
+                        'admin' => 'Admin',
+                        'author' => 'Author',
+                    ])
+                    ->default('author')
+                    ->required(),
             ]);
     }
 
@@ -45,6 +58,7 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->label('Name')->searchable()->sortable(),
                 TextColumn::make('email')->label('Email')->searchable()->sortable(),
+                TextColumn::make('role')->label('Role')->searchable()->sortable(),
                 TextColumn::make('email_verified_at')->label('Email Verified At')->dateTime(),
                 TextColumn::make('created_at')->label('Created At')->dateTime(),
             ])
@@ -56,10 +70,7 @@ class UserResource extends Resource
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\DeleteAction::make(),
-                ])
-
-
-
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

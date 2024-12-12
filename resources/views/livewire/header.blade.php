@@ -1,7 +1,7 @@
-<header class="flex sticky top-0 w-full bg-white bg-opacity-70 py-4 px-6 backdrop-blur-sm z-50">
-    <div class="flex w-full max-w-[1256px] mx-auto justify-between items-center">
+<header class="flex 0 w-full fixed top-0 bg-white border border-b z-100">
+    <div class="flex w-full max-w-[1440px] px-4 mx-auto justify-between items-center">
         <a href="/" class="flex">
-            <img src="{{ asset('assets/img.png') }}" alt="logo" class="h-10" />
+            <img src="{{ asset('assets/img.png') }}" alt="logo" class="h-[76px] w-[204px]"/>
         </a>
 
         <div class="hidden md:flex items-center gap-8">

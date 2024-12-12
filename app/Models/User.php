@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,11 +16,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
     protected $fillable = [
         'name',
         'email',
         'email_verified_at',
         'password',
+        'role',
     ];
 
     /**
@@ -45,5 +46,40 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check if the user has the specified role.
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Check if the user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * Check if the user is an author.
+     *
+     * @return bool
+     */
+    public function isAuthor(): bool
+    {
+        return $this->hasRole('author');
+    }
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }

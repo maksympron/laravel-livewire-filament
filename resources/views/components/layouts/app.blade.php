@@ -12,17 +12,20 @@
 @livewire('header')
 @livewire('mobile-menu')
 
-<div class="flex flex-1">
+<div class="flex pt-[76px] ">
 
-    <div class="w-1/4 bg-gray-100">
+    <div class="bg-gray-100">
         @livewire('sidebar')
     </div>
-    <div class="w-3/4">
+    <div class="w-full">
         @if(request()->is('contact'))
             @livewire('contact')
+        @elseif(request()->is('dashboard'))
+            @livewire('dashboard')
         @else
             @livewire('content')
         @endif
+
     </div>
 </div>
 
